@@ -1,0 +1,50 @@
+﻿@model IE_TaskTracker.Models._Task
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+
+
+    <div id="tableDiv"></div>
+    <div id="taskCreateForm">
+        @using (Ajax.BeginForm("AJAXCreate", "_Tasks", new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "POST",
+            UpdateTargetId = "tableDiv"
+        }))
+        {
+            
+        <div class="form-group">
+            @Html.AntiForgeryToken()
+            <div>
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        }
+
+
+    </div>
+
+    @section Scripts {
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <script src="~/Custom_Scripts/TableBuilder.js"></script>
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+}
+else
+{
+<h1> Error 401: Unauthorized.</h1>
+<h3>Please log in.</h3>
+
+}
+
+
+
