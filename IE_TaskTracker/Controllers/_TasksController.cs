@@ -131,15 +131,25 @@ namespace IE_TaskTracker.Controllers
 
         //CHECKBOX_HANDLER
         [HttpPost]
-        public ActionResult AJAXEdit([Bind(Include = "Id,Description,IsDone")] _Task _Task)
+        public ActionResult AJAXEdit(int? id, bool value)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            _Task _Task = db.Tasks.Find(id);
+            if (_Task == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                _Task.IsDone = value;
                 db.Entry(_Task).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return PartialView("_TaskTable", Get_Tasks());
             }
-            return View(_Task);
+            
         }
 
         // GET: _Tasks/Delete/5
